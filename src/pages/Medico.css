@@ -1,0 +1,58 @@
+.exameContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.exameBox {
+    width: 43%;
+    background-color: #ffffff;
+    border: 1px solid #2e5668;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: 0.3s all;
+}
+
+.exameBox:hover{
+    background-color: #f7f7f7;
+    transform: scale(1.01);
+}
+
+.exameTitulo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2e5668;
+    margin-bottom: 10px;
+}
+
+.exameDescricao {
+    color: #4f6a77;
+    margin-bottom: 8px;
+}
+
+.examePaciente {
+    font-weight: bold;
+    color: #2e5668;
+    margin-bottom: 6px;
+}
+
+.exameDataHora {
+    font-style: italic;
+    color: #555;
+}
+
+.botaoFinalizar {
+    background-color: #5697b4;
+    color: white;
+    border-radius: 5px;
+    height: 30px;
+    transition: 0.3s all;
+    border: 1px solid white;
+}
+
+.botaoFinalizar:hover{
+    cursor: pointer;
+    background-color: #4f6a77;
+}
