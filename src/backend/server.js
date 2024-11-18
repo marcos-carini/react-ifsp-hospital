@@ -47,6 +47,28 @@ app.get('/usuarios', (req, res) => {
     });
 });
 
+// Rota para cadastrar um novo usuário
+app.post('/usuarios', (req, res) => {
+    const { nome, email, senha, rg, cpf, cep, bairro, rua, crm, tipo, foto } = req.body;
+
+    // Validar os campos obrigatórios no backend
+    if (!nome || !email || !senha || !rg || !cpf || !cep || !bairro || !rua || !tipo) {
+        return res.status(400).send('Campos obrigatórios não preenchidos!');
+    }
+
+    // Formatar a linha para o arquivo
+    const novaLinha = `${nome},${email},${senha},${cpf},${rg},${cep},${rua},${bairro},${crm || 'null'},${tipo},${foto || 'null'}\n`;
+
+    // Adicionar ao arquivo usuarios.txt
+    fs.appendFile('./usuarios.txt', novaLinha, (err) => {
+        if (err) {
+            return res.status(500).send('Erro ao salvar o usuário!');
+        }
+
+        res.status(201).send('Usuário cadastrado com sucesso!');
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
