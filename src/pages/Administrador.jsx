@@ -28,9 +28,43 @@ export default function Administrador(){
         setTipo(1);
     }
 
-    const cadastrarNovoUsuario = () => {
-
-    }
+    const cadastrarNovoUsuario = async () => {
+        // Validar os campos obrigatórios
+        if (!nome || !email || !senha || !rg || !cpf || !cep || !bairro || !rua || !tipo) {
+            alert("Por favor, preencha todos os campos obrigatórios!");
+            return;
+        }
+    
+        // Construir o objeto do usuário
+        const novoUsuario = {
+            nome,
+            email,
+            senha,
+            rg,
+            cpf,
+            cep,
+            bairro,
+            rua,
+            crm: tipo == 2 ? crm : null, // CRM somente para médicos
+            tipo,
+            foto: null // Inicialmente null
+        };
+    
+        try {
+            // Enviar os dados para o backend
+            const response = await axios.post("http://localhost:3001/usuarios", novoUsuario);
+    
+            if (response.status === 201) {
+                alert("Usuário cadastrado com sucesso!");
+                limparFormulario();
+            } else {
+                alert("Erro ao cadastrar o usuário!");
+            }
+        } catch (error) {
+            alert("Erro na comunicação com o servidor!");
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
         const buscarEndereco = async () => {

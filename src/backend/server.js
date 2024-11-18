@@ -15,18 +15,38 @@ app.get('/usuarios', (req, res) => {
             return res.status(500).send('Erro ao ler o arquivo');
         }
 
-        // Filtra as linhas vazias antes de processar os dados
         const usuarios = data
-            .split('\n')
-            .filter(line => line.trim() !== '') // Ignora linhas em branco
+            .split('\n') // Divide o conteúdo em linhas
+            .filter(line => line.trim() !== '') // Remove linhas vazias
             .map(line => {
-                const [nome, email, senha, cpf, rg, crm, tipo] = line.split(',');
-                return { nome, email, senha, cpf, rg, crm, tipo: tipo.trim() }; // Remove o \r do tipo
-            });
+                const campos = line.split(',').map(campo => campo.trim()); // Remove espaços extras
+                if (campos.length !== 11) {
+                    console.error('Erro: Linha inválida no arquivo:', line);
+                    return null;
+                }
+
+                const [nome, email, senha, cpf, rg, cep, rua, bairro, crm, tipo, foto] = campos;
+
+                return {
+                    nome,
+                    email,
+                    senha,
+                    cpf,
+                    rg,
+                    cep,
+                    rua,
+                    bairro,
+                    crm: crm === 'null' ? null : crm, // Converte 'null' string em null
+                    tipo,
+                    foto: foto === 'null' ? null : foto // Converte 'null' string em null
+                };
+            })
+            .filter(usuario => usuario !== null); // Remove entradas inválidas
 
         res.json(usuarios);
     });
 });
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
