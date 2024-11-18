@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import axios from "axios";
 
 export default function Administrador(){
     const [nome, setNome] = useState('');
@@ -8,6 +9,9 @@ export default function Administrador(){
     const [senha, setSenha] = useState('');
     const [rg, setRg] = useState('');
     const [cpf, setCpf] = useState('');
+    const [cep, setCep] = useState('');
+    const [bairro, setBairro] = useState('');
+    const [rua, setRua] = useState('');
     const [crm, setCrm] = useState('');
     const [tipo, setTipo] = useState(1);
 
@@ -17,6 +21,9 @@ export default function Administrador(){
         setSenha('');
         setRg('');
         setCpf('');
+        setCep('');
+        setBairro('');
+        setRua('');
         setCrm('');
         setTipo(1);
     }
@@ -24,6 +31,30 @@ export default function Administrador(){
     const cadastrarNovoUsuario = () => {
 
     }
+
+    useEffect(() => {
+        const buscarEndereco = async () => {
+            if (cep.length === 8) {
+                try {
+                    const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+                    if (!response.data.erro) {
+                        setBairro(response.data.bairro || '');
+                        setRua(response.data.logradouro || '');
+                    } else {
+                        alert('CEP não encontrado!');
+                        setBairro('');
+                        setRua('');
+                    }
+                } catch (error) {
+                    alert('Erro ao buscar o CEP.');
+                    setBairro('');
+                    setRua('');
+                }
+            }
+        };
+
+        buscarEndereco();
+    }, [cep]);
 
     return (
         <div>
@@ -62,6 +93,24 @@ export default function Administrador(){
                                 <label style={{color: '#2e5668', fontWeight: 'bold'}}>Informe seu CPF</label>
                                 <input type='text' placeholder='CPF...' className='inputStyle' maxLength={11}
                                  value={cpf} onChange={(event) => setCpf(event.target.value)}/>
+                            </div>
+                            <div style={{display: 'flex', flexDirection: 'column', gap: 5}}>
+                                <label style={{color: '#2e5668', fontWeight: 'bold'}}>Informe seu CEP</label>
+                                <input type='text' placeholder='CEP...' className='inputStyle' maxLength={8}
+                                 value={cep} onChange={(event) => setCep(event.target.value)}/>
+                            </div>
+                            <div style={{display: 'flex', justifyContent: 'space-between', gap: 5}}>
+                                <div style={{display: 'flex', flexDirection: 'column', gap: 5}}>
+                                    <label style={{color: '#2e5668', fontWeight: 'bold'}}>Bairro</label>
+                                    <input type='text' placeholder='Bairro...' className='inputStyle' maxLength={40}
+                                    value={bairro} onChange={(event) => setBairro(event.target.value)} />
+                                </div>
+                                <div style={{display: 'flex', flexDirection: 'column', gap: 5}}>
+                                    <label style={{color: '#2e5668', fontWeight: 'bold'}}>Rua</label>
+                                    <input type='text' placeholder='Rua...' className='inputStyle' maxLength={40}
+                                    value={rua} onChange={(event) => setRua(event.target.value)}/>
+                                </div>
+                                
                             </div>
                             <div style={{display: 'flex', flexDirection: 'column', gap: 5}}>
                                 <label style={{color: '#2e5668', fontWeight: 'bold'}}>Selecione o Tipo do Usuário</label>
